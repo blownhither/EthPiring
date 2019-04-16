@@ -2,6 +2,19 @@ import sys
 from pymongo import MongoClient
 
 
+def get_timestamp_collection():
+    client = MongoClient()
+    db = client.get_database('eth')
+    tt = db.get_collection('transaction_timestamp')
+    return tt
+
+
+def get_database():
+    client = MongoClient()
+    db = client.get_database('eth')
+    return db
+
+
 def insert_one(data):
     client = MongoClient()
     db = client.get_database('eth')

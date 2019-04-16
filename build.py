@@ -21,17 +21,20 @@ def get_pending_transactions():
 
 
 def get_transaction(tx_hash):
-    return w3.eth.getTransaction(tx_hash)
+    ret = w3.eth.getTransaction(tx_hash)
+    print('get_transaction:', tx_hash[:10])
+    return ret
 
 
-def get_many_transactions(tx_hashes):
+def multithread_get_transactions(tx_hashes):
     async def _work():
-        with ThreadPoolExecutor(max_workers=30) as executor:
+        with ThreadPoolExecutor(max_workers=256) as executor:
             loop = asyncio.get_event_loop()
-            tasks = [loop.run_in_executor( executor, get_transaction, h) for h in tx_hashes]
+            tasks = [loop.run_in_executor(executor, get_transaction, h) for h in tx_hashes]
             return [response for response in await asyncio.gather(*tasks)]
 
-    return asyncio.run(_work())
+    responses = asyncio.run(_work())
+    return [dict(x) for x in responses if x is not None]
 
 
 class RollingPool:
@@ -77,7 +80,12 @@ class RollingPool:
 
     def run_forever(self, duration=1):
         while True:
-            transactions = get_pending_transactions()
+            try:
+                transactions = get_pending_transactions()
+            except Exception as e:
+                print('Exception: ', e)
+                time.sleep(duration)
+                continue
             submitted = self.update(transactions)
             count = self.record(submitted)
             print(datetime.datetime.now().strftime('%m/%d %H:%M:%S'),

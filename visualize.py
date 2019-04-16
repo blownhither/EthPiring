@@ -3,13 +3,13 @@ import pymongo
 import numpy as np
 import asyncio
 
-from build import get_transaction, get_many_transactions
+from build import get_transaction, multithread_get_transactions
 from matplotlib import pyplot as plt
 
 
 
 a = np.load(open('records.npy', 'rb'))
-plt.hist(a, bins=100)
+plt.hist(a, bins=300)
 plt.show()
 exit()
 
@@ -21,9 +21,14 @@ db = client.get_database('eth')
 tt = db.get_collection('transaction_timestamp')
 it = tt.find({'start': {'$gt': time.time() - 4.8 * HOUR, '$lt': time.time() - 4 * HOUR}}).distinct('txhash')
 
+
+
 records = []
-trans = get_many_transactions(list(it))
+trans = multithread_get_transactions(list(it))
 for t in trans:
+    if t is None:
+        print("None")
+        continue
     price = t['gasPrice']
     print(price)
     records.append(price)
