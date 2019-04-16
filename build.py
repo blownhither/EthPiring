@@ -42,6 +42,12 @@ def multithread_get_transactions(tx_hashes):
             return [response for response in await asyncio.gather(*tasks)]
 
     responses = asyncio.run(_work())
+
+    # # Python 3.6 implementation ('asyncio' has no attribute 'run' in Python 3.6)
+    # loop = asyncio.get_event_loop()
+    # responses = loop.run_until_complete(_work())
+    # loop.close()
+
     return [dict(x) for x in responses if x is not None]
 
 
