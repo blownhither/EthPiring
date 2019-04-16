@@ -21,7 +21,15 @@ def get_pending_transactions():
 
 
 def get_transaction(tx_hash):
+    """
+    get transaction from w3, or db
+    """
+    ret = db.get_transaction(tx_hash)
+    if ret is not None:
+        return ret
     ret = w3.eth.getTransaction(tx_hash)
+    if ret is not None:
+        db.insert_transaction(dict(ret))
     print('get_transaction:', tx_hash[:10])
     return ret
 

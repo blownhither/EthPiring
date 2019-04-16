@@ -1,5 +1,29 @@
 import sys
 from pymongo import MongoClient
+import threading
+
+
+_thread_local = threading.local()
+
+
+def _get_thread_collection_session():
+    coll = getattr(_thread_local, 'db_tx_collection_session', None)
+    if coll is None:
+        coll = MongoClient().get_database('eth').get_collection('transactions')
+        _thread_local.db_tx_collection_session = coll
+    return coll
+
+
+def insert_transaction(transaction):
+    transaction['hash'] = transaction['hash'].hex()
+    transaction['value'] = float(transaction['value'])
+    transaction['gasPrice'] = float(transaction['gasPrice'])
+    _get_thread_collection_session().insert_one(transaction)
+
+
+def get_transaction(h):
+    ret = _get_thread_collection_session().find_one({'hash': h})
+    return ret
 
 
 def get_timestamp_collection():
