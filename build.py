@@ -36,7 +36,7 @@ def get_transaction(tx_hash):
 
 def multithread_get_transactions(tx_hashes):
     async def _work():
-        with ThreadPoolExecutor(max_workers=256) as executor:
+        with ThreadPoolExecutor(max_workers=128) as executor:
             loop = asyncio.get_event_loop()
             tasks = [loop.run_in_executor(executor, get_transaction, h) for h in tx_hashes]
             return [response for response in await asyncio.gather(*tasks)]
