@@ -12,7 +12,8 @@ scp -r *.py "$MACHINE:$REMOTE_DIR";
 
 #ssh "$MACHINE" "cd $REMOTE_DIR; nohup sh -c \"$REMOTE_PY build.py 2>&1 | tee out.log \" & ";
 #ssh "$MACHINE" "cd $REMOTE_DIR; nohup sh -c \"$REMOTE_PY visualize.py 2>&1 | tee out.log \" & ";
-ssh "$MACHINE" "cd $REMOTE_DIR; nohup sh -c \"$REMOTE_PY features.py 2>&1 | tee features.log \"& ";
+ssh "$MACHINE" "cd $REMOTE_DIR; nohup sh -c \"$REMOTE_PY gas_station.py 2>&1 | tee gas_station.log \"& ";
+#ssh "$MACHINE" "cd $REMOTE_DIR; nohup sh -c \"$REMOTE_PY features.py 2>&1 | tee features.log \"& ";
 #scp "$MACHINE:$REMOTE_DIR/hist.png" .
 #scp "$MACHINE:$REMOTE_DIR/records.npy" .
 
