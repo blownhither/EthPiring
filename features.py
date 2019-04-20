@@ -78,8 +78,9 @@ def get_transactions_by_range(start=None, end=None):
 def main():
     init()
 
-    start = 1554961692.21946
-    # end = 1554961732.21946
+    # start = 1554961692.21946
+    start = datetime.datetime(2019, 4, 13).timestamp()
+    # end = 1554961732.21946/
     end = _end_of_day(start)
 
     transactions = get_transactions_by_range(start, end)
@@ -89,7 +90,7 @@ def main():
     columns.remove('hash')
     columns = columns + ['hash']        # put has last
 
-    name = datetime.datetime.fromtimestamp(start).strftime('%Y%m%d') + '.csv'
+    name = 'data/' + datetime.datetime.fromtimestamp(start).strftime('%Y%m%d') + '.csv'
     print(name)
     df.to_csv(name, index=False, columns=columns)
 

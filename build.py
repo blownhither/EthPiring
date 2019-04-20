@@ -2,6 +2,7 @@ import os
 import time
 import datetime
 import asyncio
+import random
 from timeit import default_timer
 from concurrent.futures import ThreadPoolExecutor
 
@@ -30,6 +31,9 @@ def get_transaction(tx_hash):
     ret = w3.eth.getTransaction(tx_hash)
     if ret is not None:
         db.insert_transaction(dict(ret))
+    if random.randint(1, 20) == 1:
+        print(datetime.datetime.today().ctime())
+
     print('get_transaction:', tx_hash[:10])
     return ret
 
